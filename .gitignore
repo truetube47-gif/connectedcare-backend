@@ -49,8 +49,9 @@ venv.bak/
 *.log
 logs/
 
-# Uploads
-uploads/
+# Uploads (but keep .gitkeep)
+uploads/*
+!uploads/.gitkeep
 
 # OS
 .DS_Store

@@ -1,0 +1,18 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mounts the 'app' directory into the container.
+      # This allows you to change the backend code and have uvicorn's --reload
+      # feature automatically restart the server without needing to rebuild the image.
+      - ./app:/app/app
+      # This volume will persist the SQLite database file across container restarts.
+      - connectedcare_db:/app/
+    environment:
+      # Ensure the database URL points to the file inside the container
+      - DATABASE_URL=sqlite:///connectedcare.db
+
+volumes:
+  connectedcare_db:

@@ -1,0 +1,28 @@
+services:
+  # Backend API Service
+  - type: web
+    name: connectedcare-backend
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: connectedcare-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 1440
+      - key: UPLOAD_DIR
+        value: ./uploads
+
+  # PostgreSQL Database
+  - type: psqldb
+    name: connectedcare-db
+    plan: free
+    databaseName: connectedcare
+    user: connectedcare_user

@@ -1,0 +1,57 @@
+# --- Core Framework ---
+fastapi==0.115.3
+uvicorn[standard]==0.32.0
+
+# --- ORM / Database Layer ---
+sqlmodel==0.0.22
+SQLAlchemy==2.0.36
+alembic==1.13.2
+
+# --- Authentication ---
+python-jose==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.1.2
+
+# --- Environment Variables ---
+python-dotenv==1.0.1
+
+# --- File Uploads / Images / PDF / X-Ray processing (basic) ---
+python-multipart==0.0.9
+Pillow==11.0.0
+
+# --- FastAPI Tools ---
+pydantic==2.9.2
+pydantic-settings==2.5.2
+
+# --- Security ---
+cryptography==43.0.1
+
+# --- Background Tasks / Scheduling ---
+celery==5.4.0
+redis==5.0.8
+
+# --- Email / Notifications (optional but recommended) ---
+fastapi-mail==1.4.1
+
+# --- Logging & Monitoring ---
+loguru==0.7.2
+
+# --- API Utilities ---
+requests==2.32.3
+httpx==0.27.2
+
+# --- Database Drivers (choose one depending on your DB) ---
+PyMySQL==1.1.1              # MySQL
+aiosqlite==0.20.0           # SQLite async
+psycopg2-binary==2.9.9      # PostgreSQL (needed for Render)
+
+# --- Background AI Use (OCR / NLP / LLM connect later) ---
+
+
+# --- Development Tools ---
+black==24.10.0
+pytest==8.3.3
+pytest-asyncio==0.23.8
+mypy==1.11.2
+PyJWT==2.8.0
+

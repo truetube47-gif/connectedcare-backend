@@ -9,7 +9,10 @@ COPY app ./app
 COPY auth ./auth
 COPY firebase_admin.py .
 
+# Railway injects PORT dynamically
+ENV PORT=8000
+
 EXPOSE 8000
 
-# Debug mode: NO reload, single process
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port $PORT"]
+

@@ -5,6 +5,7 @@ from .pharmacy import Pharmacy
 from .prescription import Prescription
 from .document import Document
 from .links import PatientPhysicianLink
+from .drug import Drug
 from .chat import (
     Conversation,
     ConversationParticipant,
@@ -17,6 +18,7 @@ __all__ = [
     "User", "UserRole", "UserStatus",
     "Patient", "Physician", "Pharmacy", 
     "Prescription", "Document", "PatientPhysicianLink",
+    "Drug",
     "Conversation", "ConversationParticipant", "ConversationParticipantRole",
     "Message", "MessageType",
 ]

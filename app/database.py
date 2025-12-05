@@ -4,7 +4,7 @@ from app.config import settings
 engine = create_engine(settings.DATABASE_URL, echo=True)
 
 def init_db():
-    from app.models import user, patient, physician, pharmacy, prescription, document, links, chat
+    from app.models import user, patient, physician, pharmacy, prescription, document, links, chat, drug
     SQLModel.metadata.create_all(engine)
 
 def get_session():

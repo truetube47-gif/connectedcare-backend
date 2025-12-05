@@ -59,7 +59,6 @@ def import_drug_data():
         logger.error(f"An unexpected error occurred during drug import: {e}", exc_info=True)
         return {"status": "error", "message": f"An unexpected error occurred: {e}"}
 
-# This allows the script to be run directly from the command line
-if __name__ == "__main__":
-    result = import_drug_data()
-    print(result)
+# By removing the __main__ block, this script can no longer be executed directly.
+# The import_drug_data function must now be called explicitly from another part
+# of the application, such as the admin API endpoint.

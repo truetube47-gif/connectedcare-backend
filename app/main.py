@@ -1,3 +1,4 @@
+import logging
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
@@ -17,6 +18,8 @@ from app.routers import (
     drugs,   # only ONCE
 )
 
+logger = logging.getLogger(__name__)
+
 app = FastAPI(title="ConnectedCare Backend")
 
 # Serve uploaded media
@@ -25,7 +28,13 @@ app.mount("/media", StaticFiles(directory="uploads"), name="media")
 # Initialize DB
 @app.on_event("startup")
 def on_startup():
-    init_db()
+    try:
+        init_db()
+        logger.info("Database initialized successfully.")
+    except Exception as e:
+        logger.exception("Error during database initialization:")
+        # Optionally re-raise the exception if you want it to still crash after logging
+        # raise e
 
 # Routers
 app.include_router(auth.router, prefix="/auth", tags=["auth"])

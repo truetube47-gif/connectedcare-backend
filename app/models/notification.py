@@ -38,31 +38,31 @@ class NotificationChannel(str, Enum):
 
 
 class Notification(SQLModel, table=True):
+    __tablename__ = "notifications"
+    
     id: Optional[int] = Field(default=None, primary_key=True)
-
     user_id: int = Field(foreign_key="user.id", index=True)
-
     title: str
     message: str
     notification_type: NotificationType = Field(default=NotificationType.OTHER)
-
     status: NotificationStatus = Field(default=NotificationStatus.UNREAD)
     priority: NotificationPriority = Field(default=NotificationPriority.MEDIUM)
-
+    
     # Stored as JSON text safely
     channels_raw: str = Field(default="[]")
     metadata_raw: str = Field(default="{}")
-
+    
     sent_at: Optional[datetime] = None
     read_at: Optional[datetime] = None
-
     action_url: Optional[str] = None
     action_label: Optional[str] = None
-
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
     user: Optional["User"] = Relationship(back_populates="notifications")
+    
+    # Exclude properties from SQLAlchemy
+    __exclude_attrs__ = ['channels', 'metadata']
 
     # ---------- JSON Helpers ----------
     @property
@@ -83,25 +83,22 @@ class Notification(SQLModel, table=True):
 
 
 class NotificationPreference(SQLModel, table=True):
+    __tablename__ = "notification_preferences"
+    
     id: Optional[int] = Field(default=None, primary_key=True)
-
     user_id: int = Field(foreign_key="user.id", unique=True, index=True)
-
     email_enabled: bool = True
     push_enabled: bool = True
     sms_enabled: bool = True
     in_app_enabled: bool = True
-
     appointment_reminders: bool = True
     medication_reminders: bool = True
     prescription_updates: bool = True
     account_alerts: bool = True
     promotional: bool = False
-
     quiet_hours_enabled: bool = False
     quiet_hours_start: str = "22:00"
     quiet_hours_end: str = "08:00"
-
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
     user: Optional["User"] = Relationship(back_populates="notification_preferences")

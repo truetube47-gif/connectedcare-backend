@@ -6,7 +6,7 @@ from .prescription import Prescription
 from .document import Document
 from .links import PatientPhysicianLink
 from .drug import Drug
-from .notification import Notification, NotificationPreference # Add this line
+# from .notification import Notification, NotificationPreference # Temporarily commented out
 from .chat import (
     Conversation,
     ConversationParticipant,
@@ -20,7 +20,7 @@ __all__ = [
     "Patient", "Physician", "Pharmacy", 
     "Prescription", "Document", "PatientPhysicianLink",
     "Drug",
-    "Notification", "NotificationPreference", # Add these lines
+    # "Notification", "NotificationPreference", # Temporarily commented out
     "Conversation", "ConversationParticipant", "ConversationParticipantRole",
     "Message", "MessageType",
 ]

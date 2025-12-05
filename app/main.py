@@ -1,4 +1,9 @@
 from fastapi import FastAPI
+app = FastAPI()
+
+@app.get("/")
+def root():
+    return {"status": "backend running", "service": "connectedcare-backend"}
 from fastapi.staticfiles import StaticFiles
 from app.routers import admin
 from app.routers import (

@@ -18,6 +18,9 @@ from app.routers import (
     chat,
     drugs,   # ← ADDED
 )
+from app.routers import drugs
+app.include_router(drugs.router)
+
 
 from app.database import init_db
 

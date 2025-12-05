@@ -5,6 +5,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY drugs.xlsx .
 COPY app ./app
 COPY auth ./auth
 COPY firebase_admin.py .

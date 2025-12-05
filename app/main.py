@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-
+from app.routers import admin
 from app.routers import (
     auth,
     patients,
@@ -36,6 +36,7 @@ app.include_router(documents.router, prefix="/documents", tags=["documents"])
 app.include_router(connections.router, prefix="/connections", tags=["connections"])
 app.include_router(uploads.router)
 app.include_router(chat.router)
+app.include_router(admin.router)
 
 # Add real drugs router (no prefix → clean URLs)
 app.include_router(drugs.router, tags=["drugs"])

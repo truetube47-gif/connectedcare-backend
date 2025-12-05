@@ -1,8 +1,13 @@
+import sys
+import os
 from fastapi import APIRouter, Depends, HTTPException, Security
 from fastapi.security import APIKeyHeader
 from starlette import status
 from app.database import init_db
-from import_drugs import import_drug_data # Import from the root-level script
+
+# Add the project root to the Python path to allow importing from the root-level script
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+from import_drugs import import_drug_data
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
 

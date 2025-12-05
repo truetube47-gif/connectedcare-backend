@@ -1,11 +1,8 @@
 from fastapi import FastAPI
-app = FastAPI()
-
-@app.get("/")
-def root():
-    return {"status": "backend running", "service": "connectedcare-backend"}
 from fastapi.staticfiles import StaticFiles
-from app.routers import admin
+
+from app.database import init_db
+
 from app.routers import (
     auth,
     patients,
@@ -16,17 +13,13 @@ from app.routers import (
     connections,
     uploads,
     chat,
-    drugs,   # ← ADDED
+    admin,
+    drugs,   # only ONCE
 )
-from app.routers import drugs
-app.include_router(drugs.router)
-
-
-from app.database import init_db
 
 app = FastAPI(title="ConnectedCare Backend")
 
-# Serve uploaded files
+# Serve uploaded media
 app.mount("/media", StaticFiles(directory="uploads"), name="media")
 
 # Initialize DB
@@ -46,10 +39,9 @@ app.include_router(uploads.router)
 app.include_router(chat.router)
 app.include_router(admin.router)
 
-# Add real drugs router (no prefix → clean URLs)
+# Drugs router (NO prefix → gives clean `/drugs`, `/drugs/search`, etc.)
 app.include_router(drugs.router, tags=["drugs"])
 
-# Root endpoints
 @app.get("/")
 async def root():
     return {"status": "ConnectedCare backend running"}

@@ -3,7 +3,7 @@ from sqlmodel import Session, select
 from app.database import get_session
 from app.models.drug import Drug
 
-router = APIRouter(prefix="/drugs", tags=["Drugs"])
+router = APIRouter(tags=["Drugs"])
 
 # --------------------------
 
@@ -29,19 +29,6 @@ def get_all_drugs(db: Session = Depends(get_session)):
 
 # --------------------------
 
-@router.get("/{drug_id}")
-def get_drug_by_id(drug_id: int, db: Session = Depends(get_session)):
-    drug = db.get(Drug, drug_id)
-    if not drug:
-        raise HTTPException(status_code=404, detail="Drug not found")
-    return drug
-
-# --------------------------
-
-# Search drugs by trade_name
-
-# --------------------------
-
 @router.get("/search")
 def search_drugs(query: str, db: Session = Depends(get_session)):
     # Search actual drugs from database
@@ -58,6 +45,13 @@ def search_drugs(query: str, db: Session = Depends(get_session)):
         return filtered_drugs
     
     return results
+
+@router.get("/item/{drug_id}")
+def get_drug_by_id(drug_id: int, db: Session = Depends(get_session)):
+    drug = db.get(Drug, drug_id)
+    if not drug:
+        raise HTTPException(status_code=404, detail="Drug not found")
+    return drug
 
 # --------------------------
 

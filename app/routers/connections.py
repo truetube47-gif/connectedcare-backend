@@ -22,9 +22,14 @@ def link_patient_to_physician(
     if current_user.role != "patient":
         raise HTTPException(status_code=403, detail="Only patients can perform this action.")
 
-    # For testing, create a patient profile if it doesn't exist
-    if current_user.patient is None:
-        from app.models.patient import Patient
+    # Check if patient profile exists for this user
+    from app.models.patient import Patient
+    patient = session.exec(
+        select(Patient).where(Patient.user_id == current_user.id)
+    ).first()
+    
+    if patient is None:
+        # Create a patient profile if it doesn't exist
         patient = Patient(
             user_id=current_user.id,
             date_of_birth="1990-01-01",
@@ -38,9 +43,8 @@ def link_patient_to_physician(
         session.add(patient)
         session.commit()
         session.refresh(patient)
-        patient_id = patient.id
-    else:
-        patient_id = current_user.patient.id
+    
+    patient_id = patient.id
     
     # Check if link already exists
     existing_link = session.exec(

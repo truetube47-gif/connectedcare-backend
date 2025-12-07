@@ -49,7 +49,7 @@ app.include_router(chat.router)
 app.include_router(admin.router)
 
 # Drugs router (NO prefix → gives clean `/drugs`, `/drugs/search`, etc.)
-app.include_router(drugs.router, tags=["drugs"])
+app.include_router(drugs.router, prefix="/drugs", tags=["drugs"])
 
 @app.get("/")
 async def root():

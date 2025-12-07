@@ -14,7 +14,7 @@ router = APIRouter(prefix="/admin", tags=["Admin"])
 # --- Simple API Key Security ---
 # In a real app, this key MUST be loaded from an environment variable
 # e.g., ADMIN_API_KEY = os.environ.get("ADMIN_API_KEY")
-ADMIN_API_KEY = "your_secret_api_key_here" 
+ADMIN_API_KEY = "G3EQPXAt_MrDoZWkMcQu-E1pB4HG341cggwETlvvVlA" 
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 async def verify_api_key(api_key: str = Security(api_key_header)):

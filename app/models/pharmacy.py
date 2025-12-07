@@ -84,7 +84,7 @@ class Pharmacy(SQLModel, table=True):
     # Relationships
     user: Optional["User"] = Relationship(back_populates="pharmacy")
     prescriptions: List["Prescription"] = Relationship(back_populates="pharmacy")
-    inventory: List["InventoryItem"] = Relationship(back_populates="pharmacy")
+    # inventory: List["InventoryItem"] = Relationship(back_populates="pharmacy")  # Temporarily commented out
     
     class Config:
         json_schema_extra = {

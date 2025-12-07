@@ -19,8 +19,8 @@ class UserStatus(str, Enum):
 Patient = ForwardRef('Patient')
 Physician = ForwardRef('Physician')
 Pharmacy = ForwardRef('Pharmacy')
-Notification = ForwardRef('Notification')
-NotificationPreference = ForwardRef('NotificationPreference')
+# Notification = ForwardRef('Notification')  # Temporarily commented out
+# NotificationPreference = ForwardRef('NotificationPreference')  # Temporarily commented out
 ConversationParticipant = ForwardRef('ConversationParticipant')
 Message = ForwardRef('Message')
 
@@ -44,12 +44,12 @@ class User(SQLModel, table=True):
     physician: Optional[Physician] = Relationship(back_populates="user")
     pharmacy: Optional[Pharmacy] = Relationship(back_populates="user")
     
-    # Notifications
-    notifications: List[Notification] = Relationship(back_populates="user")
-    notification_preferences: Optional[NotificationPreference] = Relationship(
-        back_populates="user",
-        sa_relationship_kwargs={"uselist": False}
-    )
+    # Notifications - Temporarily commented out
+    # notifications: List[Notification] = Relationship(back_populates="user")
+    # notification_preferences: Optional[NotificationPreference] = Relationship(
+    #     back_populates="user",
+    #     sa_relationship_kwargs={"uselist": False}
+    # )
     
     # Messaging
     conversations: List[ConversationParticipant] = Relationship(back_populates="user")

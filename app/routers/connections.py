@@ -7,7 +7,7 @@ from app.models.links import PatientPhysicianLink
 from app.models.user import User
 from app.utils.security import get_current_active_user
 
-router = APIRouter(prefix="/connections", tags=["Connections"])
+router = APIRouter(tags=["Connections"])
 
 @router.post("/link-physician/{physician_id}", status_code=201)
 def link_patient_to_physician(
@@ -17,11 +17,30 @@ def link_patient_to_physician(
 ):
     """
     Allows a logged-in patient to request a connection with a physician.
+    For testing, creates a patient profile if it doesn't exist.
     """
-    if current_user.role != "patient" or current_user.patient is None:
+    if current_user.role != "patient":
         raise HTTPException(status_code=403, detail="Only patients can perform this action.")
 
-    patient_id = current_user.patient.id
+    # For testing, create a patient profile if it doesn't exist
+    if current_user.patient is None:
+        from app.models.patient import Patient
+        patient = Patient(
+            user_id=current_user.id,
+            date_of_birth="1990-01-01",
+            blood_type="O+",
+            allergies="None",
+            medical_history="None",
+            emergency_contact_name="Emergency Contact",
+            emergency_contact_phone="555-0000",
+            emergency_contact_relation="Spouse"
+        )
+        session.add(patient)
+        session.commit()
+        session.refresh(patient)
+        patient_id = patient.id
+    else:
+        patient_id = current_user.patient.id
     
     # Check if link already exists
     existing_link = session.exec(

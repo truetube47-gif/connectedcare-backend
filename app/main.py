@@ -16,6 +16,7 @@ from app.routers import (
     chat,
     admin,
     drugs,   # only ONCE
+    profile,
 )
 
 logger = logging.getLogger(__name__)
@@ -47,6 +48,7 @@ app.include_router(connections.router, prefix="/connections", tags=["connections
 app.include_router(uploads.router)
 app.include_router(chat.router)
 app.include_router(admin.router)
+app.include_router(profile.router, prefix="/profile", tags=["profile"])
 
 # Drugs router (NO prefix → gives clean `/drugs`, `/drugs/search`, etc.)
 app.include_router(drugs.router, prefix="/drugs", tags=["drugs"])

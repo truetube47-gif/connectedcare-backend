@@ -32,6 +32,7 @@ redis==5.0.8
 
 # --- Email / Notifications (optional but recommended) ---
 fastapi-mail==1.4.1
+jinja2==3.1.6
 
 # --- Logging & Monitoring ---
 loguru==0.7.2

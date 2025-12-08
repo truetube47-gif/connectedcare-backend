@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
-from sqlmodel import Session, select
+from sqlmodel import Session, select, SQLModel
 from typing import List, Optional
 from datetime import datetime
 from app.database import get_session

@@ -21,11 +21,25 @@ def import_drug_data():
         
         # Load the excel file
         try:
+            # Try openpyxl first
             df = pd.read_excel("drugs.xlsx", engine='openpyxl')
             logger.info(f"Successfully loaded Excel file with {len(df)} rows.")
-        except Exception as e:
-            logger.error(f"Error reading Excel file: {e}", exc_info=True)
-            return {"status": "error", "message": f"Failed to read drugs.xlsx: {e}. The Excel file appears to be corrupted or empty. Please provide a valid Excel file with drug data."}
+            logger.info(f"Columns found: {list(df.columns)}")
+        except Exception as e1:
+            logger.error(f"openpyxl failed: {e1}")
+            try:
+                # Try xlrd as fallback
+                df = pd.read_excel("drugs.xlsx", engine='xlrd')
+                logger.info(f"Successfully loaded Excel file with xlrd - {len(df)} rows.")
+            except Exception as e2:
+                logger.error(f"xlrd failed: {e2}")
+                try:
+                    # Try default engine
+                    df = pd.read_excel("drugs.xlsx")
+                    logger.info(f"Successfully loaded Excel file with default engine - {len(df)} rows.")
+                except Exception as e3:
+                    logger.error(f"All engines failed: {e3}")
+                    return {"status": "error", "message": f"Failed to read drugs.xlsx with all engines: {e3}"}
 
         with Session(engine) as session:
             # Optional: Check if the table is already populated to avoid duplication
@@ -43,10 +57,10 @@ def import_drug_data():
                 drug_data = {
                     "trade_name": str(row.get("trade_name", "")).strip(),
                     "generic_name": str(row.get("generic_name", "")).strip(),
-                    "strength": str(row.get("strength", "")).strip() if pd.notna(row.get("strength")) else None,
+                    "strength": str(row.get(" strength", "")).strip() if pd.notna(row.get(" strength")) else None,
                     "dosage_form": str(row.get("dosage_form", "")).strip() if pd.notna(row.get("dosage_form")) else None,
                     "manufacturer": str(row.get("manufacturer", "")).strip() if pd.notna(row.get("manufacturer")) else None,
-                    "ndc": str(row.get("package_size", "")).strip() if pd.notna(row.get("package_size")) else None
+                    "ndc": str(row.get("pack_size", "")).strip() if pd.notna(row.get("pack_size")) else None
                 }
                 
                 # Only add if we have at least trade_name and generic_name

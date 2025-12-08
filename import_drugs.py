@@ -25,7 +25,7 @@ def import_drug_data():
             logger.info(f"Successfully loaded Excel file with {len(df)} rows.")
         except Exception as e:
             logger.error(f"Error reading Excel file: {e}", exc_info=True)
-            return {"status": "error", "message": f"Failed to read drugs.xlsx: {e}"}
+            return {"status": "error", "message": f"Failed to read drugs.xlsx: {e}. The Excel file appears to be corrupted or empty. Please provide a valid Excel file with drug data."}
 
         with Session(engine) as session:
             # Optional: Check if the table is already populated to avoid duplication
@@ -36,24 +36,32 @@ def import_drug_data():
                 return {"status": "skipped", "message": message}
 
             logger.info("Importing new drug data into the database...")
-            for _, row in df.iterrows():
-                drug = Drug(
-                    trade_name=row.get("Trade Name"),
-                    price=row.get("Price"),
-                    strength=row.get("Strength"),
-                    dosage_form=row.get("Dosage Form"),
-                    manufacturer=row.get("Manufacturer"),
-                    pack_size=row.get("Pack Size"),
-                    composition=row.get("Composition"),
-                )
-                session.add(drug)
             
+            # Map Excel columns to database fields
+            drugs_to_import = []
+            for _, row in df.iterrows():
+                drug_data = {
+                    "trade_name": str(row.get("trade_name", "")).strip(),
+                    "generic_name": str(row.get("generic_name", "")).strip(),
+                    "strength": str(row.get("strength", "")).strip() if pd.notna(row.get("strength")) else None,
+                    "dosage_form": str(row.get("dosage_form", "")).strip() if pd.notna(row.get("dosage_form")) else None,
+                    "manufacturer": str(row.get("manufacturer", "")).strip() if pd.notna(row.get("manufacturer")) else None,
+                    "ndc": str(row.get("package_size", "")).strip() if pd.notna(row.get("package_size")) else None
+                }
+                
+                # Only add if we have at least trade_name and generic_name
+                if drug_data["trade_name"] and drug_data["generic_name"]:
+                    drugs_to_import.append(Drug(**drug_data))
+            
+            if not drugs_to_import:
+                return {"status": "error", "message": "No valid drug data found in Excel file"}
+            
+            # Bulk insert
+            session.add_all(drugs_to_import)
             session.commit()
-        
-        final_count = session.query(Drug).count()
-        success_message = f"Successfully imported {final_count} drugs."
-        logger.info(success_message)
-        return {"status": "success", "message": success_message}
+            
+            logger.info(f"Successfully imported {len(drugs_to_import)} drugs.")
+            return {"status": "success", "message": f"Successfully imported {len(drugs_to_import)} drugs"}
 
     except Exception as e:
         logger.error(f"An unexpected error occurred during drug import: {e}", exc_info=True)

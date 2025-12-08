@@ -7,7 +7,7 @@ from app.database import init_db
 
 # Add the project root to the Python path to allow importing from the root-level script
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-# from import_drugs import import_drug_data  # Temporarily commented out
+from import_drugs import import_drug_data
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
 
@@ -30,19 +30,19 @@ async def verify_api_key(api_key: str = Security(api_key_header)):
 @router.post("/init-db", dependencies=[Depends(verify_api_key)])
 def initialize_database():
     """Initializes the database and creates all tables."""
-    init_db()
-    return {"status": "ok", "message": "Database tables created"}
+    result = init_db()
+    return {"status": "ok", "message": "Database tables created", "result": result}
 
- @router.post("/import-drugs", dependencies=[Depends(verify_api_key)])
- async def trigger_drug_import():
-     """
-     Triggers the one-time import of drug data from the drugs.xlsx file.
-     This is an idempotent operation; it will skip if drugs are already present.
-     """
-     result = import_drug_data()
-     if result["status"] == "error":
+@router.post("/import-drugs", dependencies=[Depends(verify_api_key)])
+async def trigger_drug_import():
+    """
+    Triggers the one-time import of drug data from the drugs.xlsx file.
+    This is an idempotent operation; it will skip if drugs are already present.
+    """
+    result = import_drug_data()
+    if result["status"] == "error":
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-             detail=result["message"]
+            detail=result["message"]
         )
-     return result
+    return result

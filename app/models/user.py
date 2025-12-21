@@ -19,6 +19,7 @@ class UserStatus(str, Enum):
 Patient = ForwardRef('Patient')
 Physician = ForwardRef('Physician')
 Pharmacy = ForwardRef('Pharmacy')
+UserProfile = ForwardRef('UserProfile')
 # Notification = ForwardRef('Notification')  # Temporarily commented out
 # NotificationPreference = ForwardRef('NotificationPreference')  # Temporarily commented out
 ConversationParticipant = ForwardRef('ConversationParticipant')
@@ -43,6 +44,7 @@ class User(SQLModel, table=True):
     patient: Optional[Patient] = Relationship(back_populates="user")
     physician: Optional[Physician] = Relationship(back_populates="user")
     pharmacy: Optional[Pharmacy] = Relationship(back_populates="user")
+    profile: Optional[UserProfile] = Relationship(back_populates="user")
     
     # Notifications - Temporarily commented out
     # notifications: List[Notification] = Relationship(back_populates="user")

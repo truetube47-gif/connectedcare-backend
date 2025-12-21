@@ -11,6 +11,7 @@ class VerificationStatus(str, Enum):
 class ProfileVerification(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="user.id")
+    profile_id: int = Field(foreign_key="userprofile.id")
     document_type: str  # "professional_id", "medical_license", etc.
     document_url: str  # URL to uploaded document
     document_number: Optional[str] = None  # ID number from the document
@@ -23,6 +24,9 @@ class ProfileVerification(SQLModel, table=True):
     reviewed_at: Optional[datetime] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
+    
+    # Relationships
+    profile: Optional["UserProfile"] = Relationship(back_populates="verifications")
 
 class UserProfile(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -66,7 +70,3 @@ class UserProfile(SQLModel, table=True):
     # Relationships
     user: Optional["User"] = Relationship(back_populates="profile")
     verifications: List[ProfileVerification] = Relationship(back_populates="profile")
-
-# Update User model to include profile relationship
-from app.models.user import User
-User.profile = Relationship(back_populates="user")

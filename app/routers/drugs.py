@@ -18,8 +18,8 @@ def get_all_drugs(db: Session = Depends(get_session)):
     if not drugs:
         # If no drugs in database, return sample data
         return [
-            {"id": 1, "trade_name": "Abilify 10 mg", "strength": "10mg", "dosage_form": "Tablets"},
-            {"id": 2, "trade_name": "Abilify 15 mg", "strength": "15mg", "dosage_form": "Tablets"}
+            {"id": 1, "medicine_name": "Abilify 10 mg", "commercial_name": "Abilify", "scientific_name": "Aripiprazole"},
+            {"id": 2, "medicine_name": "Abilify 15 mg", "commercial_name": "Abilify", "scientific_name": "Aripiprazole"}
         ]
     return drugs
 
@@ -32,16 +32,16 @@ def get_all_drugs(db: Session = Depends(get_session)):
 @router.get("/search")
 def search_drugs(query: str, db: Session = Depends(get_session)):
     # Search actual drugs from database
-    statement = select(Drug).where(Drug.trade_name.ilike(f"%{query}%"))
+    statement = select(Drug).where(Drug.medicine_name.ilike(f"%{query}%"))
     results = db.exec(statement).all()
     
     if not results:
         # If no drugs found in database, search sample data
         all_drugs = [
-            {"id": 1, "trade_name": "Abilify 10 mg", "strength": "10mg", "dosage_form": "Tablets"},
-            {"id": 2, "trade_name": "Abilify 15 mg", "strength": "15mg", "dosage_form": "Tablets"}
+            {"id": 1, "medicine_name": "Abilify 10 mg", "commercial_name": "Abilify", "scientific_name": "Aripiprazole"},
+            {"id": 2, "medicine_name": "Abilify 15 mg", "commercial_name": "Abilify", "scientific_name": "Aripiprazole"}
         ]
-        filtered_drugs = [drug for drug in all_drugs if query.lower() in drug["trade_name"].lower()]
+        filtered_drugs = [drug for drug in all_drugs if query.lower() in drug["medicine_name"].lower()]
         return filtered_drugs
     
     return results
@@ -61,6 +61,6 @@ def get_drug_by_id(drug_id: int, db: Session = Depends(get_session)):
 
 @router.get("/categories")
 def get_dosage_categories(db: Session = Depends(get_session)):
-    statement = select(Drug.dosage_form).distinct()
+    statement = select(Drug.commercial_name).distinct()
     categories = [row[0] for row in db.exec(statement).all() if row[0] is not None]
     return categories

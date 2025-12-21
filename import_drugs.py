@@ -19,6 +19,12 @@ def import_drug_data():
         # Ensure database and tables are created
         init_db()
         
+        # Drop and recreate the drugs table to handle schema changes
+        from app.models.drug import Drug
+        Drug.__table__.drop(engine, checkfirst=True)
+        Drug.__table__.create(engine, checkfirst=True)
+        logger.info("Dropped and recreated drugs table with new schema")
+        
         # Load the excel file
         try:
             # Try openpyxl first
@@ -55,16 +61,15 @@ def import_drug_data():
             drugs_to_import = []
             for _, row in df.iterrows():
                 drug_data = {
-                    "trade_name": str(row.get("trade_name", "")).strip(),
-                    "generic_name": str(row.get("generic_name", "")).strip(),
-                    "strength": str(row.get(" strength", "")).strip() if pd.notna(row.get(" strength")) else None,
-                    "dosage_form": str(row.get("dosage_form", "")).strip() if pd.notna(row.get("dosage_form")) else None,
-                    "manufacturer": str(row.get("manufacturer", "")).strip() if pd.notna(row.get("manufacturer")) else None,
-                    "ndc": str(row.get("pack_size", "")).strip() if pd.notna(row.get("pack_size")) else None
+                    "medicine_name": str(row.get("Medicine_Name", "")).strip(),
+                    "commercial_name": str(row.get("Commercial_Name", "")).strip() if pd.notna(row.get("Commercial_Name")) else None,
+                    "scientific_name": str(row.get("Scientific_Name", "")).strip() if pd.notna(row.get("Scientific_Name")) else None,
+                    "company": str(row.get("Company", "")).strip() if pd.notna(row.get("Company")) else None,
+                    "description": str(row.get("Description", "")).strip() if pd.notna(row.get("Description")) else None
                 }
                 
-                # Only add if we have at least trade_name and generic_name
-                if drug_data["trade_name"] and drug_data["generic_name"]:
+                # Only add if we have at least medicine_name
+                if drug_data["medicine_name"]:
                     drugs_to_import.append(Drug(**drug_data))
             
             if not drugs_to_import:

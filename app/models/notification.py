@@ -60,9 +60,6 @@ class Notification(SQLModel, table=True):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
     user: Optional["User"] = Relationship(back_populates="notifications")
-    
-    # Exclude properties from SQLAlchemy
-    __exclude_attrs__ = ['channels', 'metadata']
 
     # ---------- JSON Helpers ----------
     @property

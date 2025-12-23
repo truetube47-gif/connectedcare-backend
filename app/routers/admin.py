@@ -7,7 +7,11 @@ from app.database import init_db
 
 # Add the project root to the Python path to allow importing from the root-level script
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from import_drugs import import_drug_data
+try:
+    from import_drugs import import_drug_data
+except ImportError:
+    # Fallback for Docker/container environments
+    import_drug_data = None
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
 
@@ -39,6 +43,11 @@ async def trigger_drug_import():
     Triggers the one-time import of drug data from the drugs.xlsx file.
     This is an idempotent operation; it will skip if drugs are already present.
     """
+    if import_drug_data is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Drug import functionality not available in this environment"
+        )
     result = import_drug_data()
     if result["status"] == "error":
         raise HTTPException(

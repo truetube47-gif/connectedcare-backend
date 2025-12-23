@@ -31,8 +31,8 @@ def get_all_drugs(db: Session = Depends(get_session)):
 
 @router.get("/search")
 def search_drugs(query: str, db: Session = Depends(get_session)):
-    # Search actual drugs from database
-    statement = select(Drug).where(Drug.medicine_name.ilike(f"%{query}%"))
+    # Search actual drugs from database using trade_name field
+    statement = select(Drug).where(Drug.trade_name.ilike(f"%{query}%"))
     results = db.exec(statement).all()
     
     if not results:
@@ -61,6 +61,6 @@ def get_drug_by_id(drug_id: int, db: Session = Depends(get_session)):
 
 @router.get("/categories")
 def get_dosage_categories(db: Session = Depends(get_session)):
-    statement = select(Drug.commercial_name).distinct()
+    statement = select(Drug.manufacturer).distinct()
     categories = [row[0] for row in db.exec(statement).all() if row[0] is not None]
     return categories

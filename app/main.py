@@ -17,6 +17,7 @@ from app.routers import (
     admin,
     drugs,   # only ONCE
     profile,
+    human_assist,
 )
 
 logger = logging.getLogger(__name__)
@@ -52,6 +53,7 @@ app.include_router(profile.router, prefix="/profile", tags=["profile"])
 
 # Drugs router (NO prefix → gives clean `/drugs`, `/drugs/search`, etc.)
 app.include_router(drugs.router, prefix="/drugs", tags=["drugs"])
+app.include_router(human_assist.router)
 
 @app.get("/")
 async def root():

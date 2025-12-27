@@ -6,6 +6,7 @@ from .prescription import Prescription
 from .document import Document
 from .links import PatientPhysicianLink
 from .drug import Drug
+from .human_assist import HumanAssistRequest
 # from .notification import Notification, NotificationPreference # Temporarily commented out
 from .chat import (
     Conversation,
@@ -20,6 +21,7 @@ __all__ = [
     "Patient", "Physician", "Pharmacy", 
     "Prescription", "Document", "PatientPhysicianLink",
     "Drug",
+    "HumanAssistRequest",
     # "Notification", "NotificationPreference", # Temporarily commented out
     "Conversation", "ConversationParticipant", "ConversationParticipantRole",
     "Message", "MessageType",
